@@ -1,24 +1,10 @@
-<br />
-<div align="center">
-  <a href="/url">
-    <img src="./assets/syncgraph-309-logo.png" alt="SyncGraph 309 Logo" height="200">
-  </a>
+# SyncGraph 309
 
-<h3 align="center">
-    [Title]
-</h3>
 
-  <p align="center">
-    [Subtitle]
-    <br />
-    <br />
-    <a href="https://github.com/openceJav/docs-required/issues">Report Bug</a>
-    ✱
-    <a href="https://github.com/openceJav/docs-required/issues">Request Feature</a>
-    ✱
-    <a href="/">Documentation</a>
-  </p>
-</div>
+
+## About
+
+## Data and Exploration
 
 ## Table of Contents
 
@@ -39,9 +25,40 @@
 
 > **TODO**: Add installation and usage information here.
 
-## File Content
+## File Content and Structure
 
-> **TODO**: Add file content here.
+Provided below are the files and folders for this project in a tree structure:
+```plaintext
+.
+├── client/
+│   ├── main.py -> (StreamLit App)
+│   ├── host.sh
+│   ├── run.sh
+│   ├── .env
+│   ├── .env.sample
+│   ├── poetry.lock
+│   └── pyproject.toml
+├── server/
+│   ├── data/
+│   │   └── *.{csv, txt, xlsx}
+│   ├── models/
+│   │   └── pkls/
+│   │       └── *.pkl
+|   ├── insights/
+|   │   └── *.ipynb
+│   ├── app.py
+│   ├── pyproject.toml
+│   ├── poetry.lock
+│   └── setup.sh
+├── docs/
+│   ├── CODE_OF_CONDUCT.md
+│   ├── CODEOWNERS
+│   ├── CONTRIBUTING.md
+│   └── SECURITY.md
+├── .gitignore
+├── README.md
+└── LICENSE
+```
 
 ## Contributing
 

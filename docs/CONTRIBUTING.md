@@ -67,7 +67,7 @@ When submitting a bug report, please make sure to address the following:
 
 ### Security Issues & Vulnerabilities
 
-Review our [Security Policy](./SECURITY.MD). **DO NOT** file a public issue for security vulnerabilities.
+Review our [Security Policy](./SECURITY). **DO NOT** file a public issue for security vulnerabilities.
 
 ### Other Issues
 
