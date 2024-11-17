@@ -1,13 +1,12 @@
 [tool.poetry]
 name = "server"
-version = "0.1.0"
-description = ""
-authors = ["Muhammad Bilal Khan <lofi.audit@gmail.com>"]
+version = "1.0.0"
+description = "Streamlit application for Theft Over Open Data"
+authors = ["Muhammad Bilal Khan <@Hi-kue>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.12"
-flask = "^3.0.3"
 
 
 [build-system]

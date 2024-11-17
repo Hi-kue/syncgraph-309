@@ -1,0 +1,5 @@
+streamlit
+rich
+python-dotenv
+openrouter
+openai
