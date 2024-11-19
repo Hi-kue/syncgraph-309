@@ -5,7 +5,10 @@
 # they will be requested for review when someone opens a
 # PR (pull request).
 *       @Hi-kue
-
+*       @bhewitt3
+*       @Dom1232
+*       @ArunaRaviKumar5
+*       @Abdoullahi-dev
 # Order is important; the last matching pattern takes
 # the most precedence. When someone opens a PR that only
 # modifies .yml files, only the following people and NOT
