@@ -23,7 +23,7 @@ __pycache__/
 **/__pycache__/
 **/.venv/
 **/.venv*/
-**/.env
+client/.env
 **/.envrc
 **/.venv
 **/.venvrc
@@ -55,3 +55,7 @@ __pycache__/
 # Gradle
 .idea/**/gradle.xml
 .idea/**/libraries
+
+# .ida from inner dirs
+/.idea/**
+**/.idea/**
