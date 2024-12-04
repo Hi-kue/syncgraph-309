@@ -59,3 +59,7 @@ client/.env
 # .ida from inner dirs
 /.idea/**
 **/.idea/**
+
+### /models .pkl files ###
+**/models/*.pkl
+models/*.pkl
