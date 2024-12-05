@@ -3,3 +3,11 @@ rich
 python-dotenv
 openrouter
 openai
+scikit-learn
+flask
+flask-smorest
+flask-cors
+seaborn
+matplotlib
+pandas
+imbalanced-learn

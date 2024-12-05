@@ -1,51 +1,35 @@
+import logging
 import os
 import sys
-from constants import OPENROUTER_API_URL, OPENROUTER_API_KEY
+import datetime
 
-import streamlit as st
-import pandas as pd
-import numpy as np
-from openai import OpenAI, OpenAIError
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
-client = OpenAI(
-    base_url=OPENROUTER_API_URL,
-    api_key=OPENROUTER_API_KEY,
-)
+from blueprint.routes import routes_bp
+from core.rich_logging import logger as log
 
-# Introduction Section
-st.write("# Theft Over Open Data - Analysis and Visualization")
+from flask import Flask, request
+from flask_cors import CORS
+from dotenv import load_dotenv, find_dotenv
 
+load_dotenv(find_dotenv())
 
-# Data Exploration Section with Streamlit
+app = Flask(__name__)
+app.logger.handlers = log.handlers
+app.logger.setLevel(logging.INFO)
+CORS(app)
+app.config["CORS_HEADERS"] = "Content-Type"
 
-# Geographical Visualization and Mapping Section
-
-# LogisticRegression Model & Tree Visualization Section
-
-# Model Evaluation Section
-
-# AI Evaluation and Explanation Section
-@st.cache
-async def get_explanation() -> str:
-    response = await client.chat.completions.create(
-        model="google/gemini-flash-1.5-exp",
-        messages=[
-            {
-                "role": "system",
-                "content": "You are a helpful assistant."
-            },
-            {
-                "role": "user",
-                "content": "<enter a descriptive user msg here>"
-            },
-        ]
-    )
-    return response.choices[0].message.content
+app.register_blueprint(routes_bp)
 
 
-def run_app() -> None:
-    os.system("streamlit run app.py --server.port 8501")
+@app.before_request
+def before_request():
+    log.info(f"Request Received: {request.method} {request.url}")
 
 
 if __name__ == "__main__":
-    run_app()
+    time_in = datetime.datetime.now()
+    app.run(host='0.0.0.0', port=5000, debug=True)
+    time_out = datetime.datetime.now() - time_in
+    log.info(f"Application started in {time_out.total_seconds()} seconds.")
