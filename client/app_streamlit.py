@@ -1,7 +1,6 @@
 import os
 import sys
 import pickle
-import json
 import requests
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
@@ -13,7 +12,7 @@ import pandas as pd
 import streamlit as st
 import matplotlib.pyplot as plt
 import seaborn as sns
-from sklearn.preprocessing import StandardScaler, LabelEncoder
+from sklearn.preprocessing import LabelEncoder
 from sklearn.model_selection import train_test_split, cross_val_score
 from sklearn.metrics import (
     confusion_matrix,
@@ -203,6 +202,32 @@ def main():
     Your current request looks like the following:
     """)
     st.json(user_input)
+
+    st.write("""
+    > [!NOTE
+    > The above JSON object is dynamically generated so long as you interact and add more entries.
+    
+    Once you are satisfied with the entries you have added, click on the `Predict` button below to make the
+    predictions based on the entries you provided above.
+    """)
+    if st.button("Predict Probabilities 🔮"):
+        st.session_state.user_inputs = user_input
+        predictions = requests.post(
+            "http://localhost:5000/api/v1/predict",
+            json=user_input
+        ).json()
+
+        st.write(predictions)
+
+        if predictions["status"] == 200:
+            st.write(f"""
+            Predictions made on `{predictions['timestamp']}` 📅,
+            using the `{predictions['model']}` model.
+            
+            The model is `{predictions['prediction']['confidence']}` confident of its predictions.
+            """)
+        else:
+            st.write(f"Error: {predictions['error']}")
 
 
 if __name__ == "__main__":

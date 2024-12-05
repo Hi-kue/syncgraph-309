@@ -18,7 +18,7 @@ from sklearn.preprocessing import StandardScaler
 
 CURRENT_DIR = os.path.abspath(__file__)
 ROOT = os.path.dirname(os.path.dirname(os.path.dirname(CURRENT_DIR)))
-MODELS_DIR = os.path.join(ROOT, "syncgraph-309", "server", "models")
+MODELS_DIR = os.path.join(ROOT, "server", "models")
 
 routes_bp = Blueprint(
     "routes_bp",
@@ -27,13 +27,29 @@ routes_bp = Blueprint(
     description="Endpoints for the Theft Over Open Data group project.")
 
 
+def safe_load_models(model_path):
+    try:
+        with open(model_path, "rb") as file:
+            log.info(f"Loading from Model Path: {model_path}")
+            model = pickle.load(file)
+
+            if model is None:
+                raise Exception("Retrieved model is None, something went wrong.")
+
+            return model
+
+    except Exception as e:
+        log.error(f"Could not load model: {e}")
+        return None
+
+
 @routes_bp.route("/predict", methods=["GET", "POST"])
 def predict() -> tuple[Response, int]:
-    log.info("SERVE: /blueprint/v1/predict [GET, POST] route")
+    log.info("SERVE: /api/v1/predict [GET, POST] route")
 
-    lr_model = pickle.load(open(os.path.join(MODELS_DIR, "lr_model.pkl"), "rb"))
-    dt_model = pickle.load(open(os.path.join(MODELS_DIR, "dt_model.pkl"), "rb"))
-    rf_model = pickle.load(open(os.path.join(MODELS_DIR, "rf_model.pkl"), "rb"))
+    lr_model = safe_load_models(os.path.join(MODELS_DIR, "lr_model.pkl"))
+    dt_model = safe_load_models(os.path.join(MODELS_DIR, "dt_model.pkl"))
+    rf_model = safe_load_models(os.path.join(MODELS_DIR, "rf_model.pkl"))
 
     log.info(f"Models Loaded: {lr_model}, {dt_model}, {rf_model}")
 
@@ -50,7 +66,7 @@ def predict() -> tuple[Response, int]:
         prediction = list(lr_model.predict(query))
 
         return jsonify({
-            "status": ResponseStatus.SUCCESS,
+            "status": ResponseStatus.SUCCESS.value,
             "prediction": {
                 "values": f"{', '.join(map(str, prediction))}",
                 "confidence": lr_model.predict_proba(query)[0][1]
@@ -62,7 +78,7 @@ def predict() -> tuple[Response, int]:
     except Exception as e:
         log.error(f"Error processing request: {str(e)}")
         return jsonify({
-            "status": ResponseStatus.INTERNAL_SERVER_ERROR,
+            "status": ResponseStatus.INTERNAL_SERVER_ERROR.value,
             "message": "An error occurred while processing the request.",
             "data": {
                 "error": str(e),
@@ -75,7 +91,7 @@ def predict() -> tuple[Response, int]:
 
 @routes_bp.route("/summarize", methods=["POST"])
 def summarize() -> tuple[Response, int]:
-    log.info("SERVE: /blueprint/v1/summarize POST (summarize route)")
+    log.info("SERVE: /api/v1/summarize POST (summarize route)")
 
     try:
         request_json = request.get_json()
@@ -100,7 +116,7 @@ def summarize() -> tuple[Response, int]:
         if not summary:
             log.error("No summary was provided in the request, something went wrong.")
             return jsonify({
-                "status": ResponseStatus.BAD_REQUEST,
+                "status": ResponseStatus.BAD_REQUEST.value,
                 "message": "No summary was provided in the request.",
                 "data": {
                     "summary": [],
@@ -109,7 +125,7 @@ def summarize() -> tuple[Response, int]:
             }), 400
 
         return jsonify({
-            "status": ResponseStatus.SUCCESS,
+            "status": ResponseStatus.SUCCESS.value,
             "message": "An error occurred while processing the request.",
             "data": {
                 "summary": summary,
@@ -121,7 +137,7 @@ def summarize() -> tuple[Response, int]:
         log.error(f"Error processing the request: {str(e)}")
 
         return jsonify({
-            "status": ResponseStatus.INTERNAL_SERVER_ERROR,
+            "status": ResponseStatus.INTERNAL_SERVER_ERROR.value,
             "message": "An error occurred while processing the request.",
             "data": {
                 "error": str(e)
@@ -132,9 +148,9 @@ def summarize() -> tuple[Response, int]:
 
 @routes_bp.route("/", methods=["GET"])
 def health() -> tuple[Response, int]:
-    log.info("SERVE: /blueprint/v1/ GET route")
+    log.info("SERVE: /api/v1/ GET route")
     return jsonify({
-        "status": ResponseStatus.SUCCESS,
+        "status": ResponseStatus.SUCCESS.value,
         "message": "Theft Over Open Data Prediction API is running.",
         "data": None,
         "version": "1.0.0",
