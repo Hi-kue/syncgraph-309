@@ -155,6 +155,10 @@ def main():
     classifications models we used to predict the likelihood of whether
     a `LOCATION_TYPE` and `PREMISES_TYPE` was an *Auto Theft* or a *Non-Auto Theft*.
     """)
+
+    st.write("""
+    On the left side where you see the sidebar, you can select columns you want to view 
+    """)
     st.markdown("---")
 
     models = {
@@ -193,28 +197,41 @@ def main():
         "LOCATION_TYPE": st.selectbox("LOCATION_TYPE", options=location_options, format_func=lambda n: n[0]),
         "PREMISES_TYPE": st.selectbox("PREMISES_TYPE", options=premises_options, format_func=lambda n: n[0]),
     }
+    model_name = st.selectbox("Select a Model to Use", models.keys())
 
-    if st.button("Add Entry"):
-        user_input.append({k: v[1] for k, v in entry_format.items()})
-        st.session_state.user_inputs = user_input
+    with st.container(border=True):
+        col1, col2 = st.columns(2)
+
+        with col1:
+            if st.button("Clear Entries", use_container_width=True):
+                user_input.clear()
+                st.session_state.user_inputs = user_input
+
+        with col2:
+            if st.button("Add Entry", use_container_width=True):
+                user_input.append({k: v[1] for k, v in entry_format.items()})
+                st.session_state.user_inputs = user_input
+
+    with st.expander("Current JSON Request", expanded=True):
+        st.write("""
+        Your current request looks like the following:
+        """)
+        st.json(user_input)
 
     st.write("""
-    Your current request looks like the following:
-    """)
-    st.json(user_input)
-
-    st.write("""
-    > [!NOTE
+    > **NOTE**:
     > The above JSON object is dynamically generated so long as you interact and add more entries.
     
     Once you are satisfied with the entries you have added, click on the `Predict` button below to make the
     predictions based on the entries you provided above.
     """)
-    if st.button("Predict Probabilities 🔮"):
+    if st.button("Predict Probabilities 🔮", use_container_width=True):
+        st.balloons()
         st.session_state.user_inputs = user_input
         predictions = requests.post(
             "http://localhost:5000/api/v1/predict",
-            json=user_input
+            params={"model_name": model_name},
+            json=user_input,
         ).json()
 
         st.write(predictions)
@@ -227,7 +244,7 @@ def main():
             The model is `{predictions['prediction']['confidence']}` confident of its predictions.
             """)
         else:
-            st.write(f"Error: {predictions['error']}")
+            st.write(f"Error: {predictions['data']['error']}")
 
 
 if __name__ == "__main__":

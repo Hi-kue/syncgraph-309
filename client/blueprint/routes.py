@@ -34,7 +34,7 @@ def safe_load_models(model_path):
             model = pickle.load(file)
 
             if model is None:
-                raise Exception("Retrieved model is None, something went wrong.")
+                raise Exception("Retrieved model is 'None', something went wrong.")
 
             return model
 
@@ -47,15 +47,29 @@ def safe_load_models(model_path):
 def predict() -> tuple[Response, int]:
     log.info("SERVE: /api/v1/predict [GET, POST] route")
 
-    lr_model = safe_load_models(os.path.join(MODELS_DIR, "lr_model.pkl"))
-    dt_model = safe_load_models(os.path.join(MODELS_DIR, "dt_model.pkl"))
-    rf_model = safe_load_models(os.path.join(MODELS_DIR, "rf_model.pkl"))
-
-    log.info(f"Models Loaded: {lr_model}, {dt_model}, {rf_model}")
+    models_dict = {
+        "Logistic Regression": "lr_model.pkl",
+        "Decision Tree": "dt_model.pkl",
+        "Random Forest": "rf_model.pkl"
+    }
 
     try:
         request_json = request.get_json()
-        log.info(f"Receiving request with json: {request_json}")
+        model_name = request.args.get("model_name")
+
+        if not request_json:
+            raise ValueError("No JSON was provided in the request.")
+
+        if not model_name:
+            raise ValueError("No model name was provided in the request.")
+
+        log.info(f"Received request with json: {request_json} and selected model: {model_name}")
+
+        model_name = models_dict.get(model_name)
+        if not model_name:
+            raise ValueError(f"Model name '{model_name}' is not supported.")
+
+        model = safe_load_models(os.path.join(MODELS_DIR, model_name))
 
         query = pd.get_dummies(pd.DataFrame(request_json))
 
@@ -63,15 +77,16 @@ def predict() -> tuple[Response, int]:
         scaled_df = scaler.fit_transform(query)
 
         query = pd.DataFrame(scaled_df)
-        prediction = list(lr_model.predict(query))
+        confidence = model.predict_proba(query)[0][1]
+        prediction = model.predict(query)
 
         return jsonify({
             "status": ResponseStatus.SUCCESS.value,
             "prediction": {
                 "values": f"{', '.join(map(str, prediction))}",
-                "confidence": lr_model.predict_proba(query)[0][1]
+                "confidence": confidence
             },
-            "model": f"{lr_model.__class__.__name__}",
+            "model": f"{model_name}",
             "timestamp": datetime.datetime.now()
         }), 200
 
