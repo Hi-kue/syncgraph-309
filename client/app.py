@@ -3,22 +3,25 @@ import os
 import sys
 import datetime
 
+import constants
+
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 from blueprint.routes import routes_bp
 from core.rich_logging import logger as log
+from constants import FLASK_APP, FLASK_ENV, FLASK_RUN_PORT
 
 from flask import Flask, request
 from flask_cors import CORS
-from dotenv import load_dotenv, find_dotenv
-
-load_dotenv(find_dotenv())
 
 app = Flask(__name__)
 app.logger.handlers = log.handlers
 app.logger.setLevel(logging.INFO)
 CORS(app)
 app.config["CORS_HEADERS"] = "Content-Type"
+app.config["FLASK_APP"] = FLASK_APP
+app.config["FLASK_ENV"] = FLASK_ENV
+app.config["FLASK_RUN_PORT"] = FLASK_RUN_PORT
 
 app.register_blueprint(routes_bp)
 

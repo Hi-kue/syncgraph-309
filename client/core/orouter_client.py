@@ -10,7 +10,6 @@ from core.rich_logging import logger as log
 from openai import OpenAI, OpenAIError
 
 DEFAULT_SYSTEM_PROMPT = """
-<WRITE_SYSTEM_PROMPT_HERE>
 """
 
 
