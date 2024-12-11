@@ -43,13 +43,13 @@ incidents using publicly available datasets. The primary objective / goals are:
 - Provide actionable insights and recommendations for improving theft prevention and response.
 - Develop a model that can be deployed with a frontend and backend.
 
-### Executive Summary
+### Executive Summary (Brief)
 
-**TODO**: Add an executive summary within here.
-
-## Key Findings
-
-**TODO**: Add key any key findings within here.
+In this project, we utilized the `Toronto Theft Over` dataset from the Toronto Police Service Public Safety Data Portal 
+to analyze and gain insights into theft trends in Toronto from 2014 to 2023. The dataset contained information regardin
+the location where the offence occured based on `OCC_YEAR`, `OCC_MONTH`, `OCC_DAY`, and various other features. Our goal
+with this project was to create a predictive model that could predict what type of crime would occur, given certain information
+passed to the model as input.
 
 ## Columnar Analysis and Visualization
 
@@ -87,9 +87,28 @@ incidents using publicly available datasets. The primary objective / goals are:
 | x                 | Numeric   | X coordinate                                   | 0              |
 | y                 | Numeric   | Y coordinate                                   | 0              |
 
-## Model Evaluation and Process
+## Types of Visualizations
 
-**TODO**: Add model evaluation and process within here.
+Here are some of the visualizations you might see throughout this project, due note that these are most
+commonly used in the data exploration stage of the project (which is stored in an .ipynb file):
+1. **Bar Plots/Charts**: Illustrating the imbalances in the data, and exploration of relationships between potential features.
+2. **Heatmaps**: Visualizing the relationship between various features, and their potential distributions / correlations.
+3. **Scatter Plots**: Rough exploration of everything in the dataset.
+4. and various other visualizations...
+
+## Models and Model Evaluation
+
+We used a variety of models to explore the data, with various techniques. For techniques used, we employed
+SMOTE (Synthetic Minority Over-sampling Technique) to balance the data, and also SMOTENC (SMOTE for Numerical
+and Categorical Variables) to balance the dataset.
+
+For our models we used the following:
+1. Logistic Regression (SMOTE, SMOTENC)
+2. DecisionTreeClassifier (SMOTE, SMOTENC)
+3. RandomForestClassifier (SMOTE, SMOTENC)
+
+To see the results of our models, and the evaluation of the models, please refer to the `c309_r2_toodu_model.ipynb` notebook 
+in the `server` folder for more information.
 
 ## Bibliography
 
