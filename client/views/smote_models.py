@@ -4,7 +4,7 @@ import requests
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
-from core.rich_logging import logger as log
+from model.smote_type import SmoteType
 from core.model_funcs import (
     safe_load_models,
     display_model_performance,
@@ -187,4 +187,4 @@ if st.button("Predict Probabilities 🔮", use_container_width=True):
     else:
         st.write(f"Error: {predictions['data']['error']}")
 
-    # TODO: Add GPT Analysis and Chat Completion Here!
+    prediction_analysis(predictions, st.session_state.model, SmoteType.SMOTE.value[0])

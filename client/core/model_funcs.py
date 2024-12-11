@@ -6,6 +6,7 @@ from typing import Any
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 from core.orouter_client import OpenRouterClient
+from model.smote_type import SmoteType
 
 import pandas as pd
 import seaborn as sns
@@ -79,5 +80,37 @@ def safe_load_models(model_path) -> Any | None:
         st.error(f"Could not load model: {e}")
 
 
-def prediction_analysis(input_json, model_name) -> str:
-    pass
+def prediction_analysis(input_json: dict, model_name: str, _type: str) -> None:
+    st.markdown("---")
+    st.subheader(f"Prediction Analysis for {model_name}")
+
+    print(f"input_json: {input_json}")
+
+    smote_type = SmoteType.match_str(_type)
+
+    response = client.create_chat_completion(
+        messages=[
+            {
+                "role": "user",
+                "content": f"""
+                The predictive model used is `{model_name}`.
+                
+                Here is the JSON data you will make an analysis on: 
+                {input_json}
+                
+                The oversampling technique that was used for this analysis is `{smote_type}`.
+                """
+            }
+        ],
+        temperature=1,
+        max_tokens=0
+    )
+
+    if response:
+        st.markdown(body=f"""
+             <div style="word-wrap: break-word; overflow-wrap: break-word; white-space: normal;">
+                {response}
+            </div>
+            """, unsafe_allow_html=True)
+    else:
+        st.error("There was an error processing the request you provided.")

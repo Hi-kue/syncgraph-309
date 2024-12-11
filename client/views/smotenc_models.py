@@ -4,6 +4,7 @@ import requests
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
+from model.smote_type import SmoteType
 from core.model_funcs import (
     safe_load_models,
     display_model_performance,
@@ -33,6 +34,10 @@ dt_model_smotenc = safe_load_models(os.path.join(MODELS_DIR, "dt_model_smotenc.p
 rf_model_smotenc = safe_load_models(os.path.join(MODELS_DIR, "rf_model_smotenc.pkl"))
 
 toodu_df = pd.read_csv(os.path.join(DATA_DIR, "Theft_Over_Open_Data_Cleaned.csv"))
+
+# NOTE: Coordinates for Pydeck Map and LONG_WGS84, LAT_WGS84
+toodu_df_map = pd.read_csv(os.path.join(DATA_DIR, "Theft_Over_Open_Data_Filtered.csv"))
+toodu_df_map.rename(columns={"LAT_WGS84": "LAT", "LONG_WGS84": "LON"}, inplace=True)
 
 
 def create_selectbox_options(label_encoder) -> list[tuple[str, int]]:
@@ -165,10 +170,14 @@ entry_format = {
     "HOOD_158": st.selectbox("HOOD_158", options=hood_options, format_func=lambda n: n[0]),
 
     # NOTE: Numerical Inputs
-    "LONG_WGS84": st.number_input("LONG_WGS84", format="%.4f", placeholder="Longitude"),
-    "LAT_WGS84": st.number_input("LAT_WGS84", format="%.4f", placeholder="Latitude"),
-    "OCC_HOUR": st.number_input("OCC_HOUR", format="%.2f", placeholder="OCC Hour"),
-    "REPORT_HOUR": st.number_input("REPORT_HOUR", format="%.2f", placeholder="Report Hour"),
+    "LONG_WGS84": st.select_slider("LONG_WGS84",
+                                   options=toodu_df_map["LON"].unique(),
+                                   value=toodu_df_map["LON"].unique()[0]),
+    "LAT_WGS84": st.select_slider("LAT_WGS84",
+                                  options=toodu_df_map["LAT"].unique(),
+                                  value=toodu_df_map["LAT"].unique()[0]),
+    "OCC_HOUR": st.number_input("OCC_HOUR", format="%.2f"),
+    "REPORT_HOUR": st.number_input("REPORT_HOUR", format="%.2f"),
 }
 
 with st.container(border=True):
@@ -197,9 +206,6 @@ with st.expander("Current JSON Request", expanded=True):
         Once you are satisfied with the entries you have added, click on the `Predict` button below to make the
         predictions based on the entries you provided above.
     """)
-
-toodu_df_map = pd.read_csv(os.path.join(DATA_DIR, "Theft_Over_Open_Data_Filtered.csv"))
-toodu_df_map.rename(columns={"LAT_WGS84": "LAT", "LONG_WGS84": "LON"}, inplace=True)
 
 st.pydeck_chart(
     pdk.Deck(
@@ -255,3 +261,5 @@ if st.button("Predict Probabilities 🔮", use_container_width=True):
         """)
     else:
         st.write(f"Error: {predictions['data']['error']}")
+
+    prediction_analysis(predictions, st.session_state.model, SmoteType.SMOTENC.value[0])
