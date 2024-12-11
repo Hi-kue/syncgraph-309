@@ -117,7 +117,7 @@ display_model_performance(selected_model, x_test, y_test, st.session_state.model
 
 st.markdown("---")
 
-st.header("Model Preditor In Action")
+st.header("Model Predictor In Action")
 st.write("""
 **What is this section about?**
 

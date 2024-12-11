@@ -107,10 +107,12 @@ def prediction_analysis(input_json: dict, model_name: str, _type: str) -> None:
     )
 
     if response:
-        st.markdown(body=f"""
-             <div style="word-wrap: break-word; overflow-wrap: break-word; white-space: normal;">
-                {response}
-            </div>
-            """, unsafe_allow_html=True)
+        # st.markdown(body=f"""
+        #      <div style="word-wrap: break-word; overflow-wrap: break-word; white-space: normal;">
+        #         {response}
+        #     </div>
+        #     """, unsafe_allow_html=True)
+        st.write(response)
+        
     else:
         st.error("There was an error processing the request you provided.")

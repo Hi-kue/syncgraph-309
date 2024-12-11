@@ -51,38 +51,34 @@ Example JSON:
 Prediction Details
 
 The prediction.values field contains a comma-separated string of predicted outcomes:
-0 indicates Theft From Motor Vehicle Over $5000.
-1 indicates Theft Over $5000.
+- 0 indicates Theft From Motor Vehicle Over $5000.
+- 1 indicates Theft Over $5000.
 
 The model's objective is to classify whether a given location is more likely to experience 
 a Motor Vehicle Theft Over $5000 or a Theft Over $5000.
 
 ---
-Required Output Format
+Required Output Format  
 
-Your output must include the following sections and should not 
-from the format provided below:
+1. Confidence Analysis: Provide the confidence score and discuss what it reveals about the model’s 
+certainty in its prediction.
 
-1. Prediction Interpretation:
-    - Prediction Values: Describe the predicted values and their meaning.
-    - Rationale: Explain why the model might have made this classification based on the features.
-2. Confidence Analysis:
-    - Score: Provide the confidence score.
-    - Analysis: Discuss what this score indicates about the model's certainty.
-3. Insights:
-    - Operational Insights: Highlight key takeaways or recommendations for analysts based on the prediction.
-    - Structure: Organized into clearly labeled sections for easy understanding and navigation.
-    - Output Format: Added a required output format to ensure consistency and clarity in responses.
+2. Insights: Highlight key recommendations or takeaways for analysts based on the prediction, ensuring 
+the output is clear, well-structured, and easy to understand.
+
+3. Operational Insights: Discuss the operational implications of the prediction, providing context and 
+contextualizing the results.
+
+4. Structure: Organized into clearly labeled sections for easy understanding and navigation.
     
-To ensure accuracy and completeness, adhere to the following guidelines:
+Take into Account:
 - Do not include titles but include headers for each section bolded in the format of:
     - ### Section Title
-    - #### Sub-Section Title
 - Do not separate sections but when necessary, use a new line.
 - Do not include any additional text or explanations beyond the required sections.
 - Do not include any unnecessary or redundant information.
 - Include styling within the paragraphs to enhance readability.
-- Ensure that the output is concise and to the point.
+- Do not include a title in the beginning.
 """
 
 
